@@ -250,7 +250,7 @@ export default function BlogDetails() {
                   </p>
                   <Link
                     className="block w-full py-3 bg-orange-500 text-white font-semibold rounded-xl hover:bg-orange-600 transition-colors text-center"
-                    href="/blog"
+                    to="/blog"
                   >
                     تصفح المزيد
                   </Link>
