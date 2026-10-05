@@ -1,4 +1,4 @@
-
+import { Link } from "react-router-dom";
 import { formatDate } from "../../helpers/Helpers";
 export default function ArticleCard({ post, view }) {
   return (
@@ -7,7 +7,8 @@ export default function ArticleCard({ post, view }) {
         className="group bg-[#161616] rounded-2xl border border-[#262626] hover:border-orange-500/30 transition-all duration-500 overflow-hidden"
         style={{ animationDelay: "0ms" }}
       >
-        <a
+        <Link
+          to={`/blog/${post.slug}`}
           className={`${view === "list" ? "flex flex-col md:flex-row hover:" : "block"}`}
           data-discover="true"
         >
@@ -104,7 +105,7 @@ export default function ArticleCard({ post, view }) {
               )}
             </div>
           </div>
-        </a>
+        </Link>
       </article>
     </>
   );

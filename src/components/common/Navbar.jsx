@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 const links = [
   { to: "/", label: "الرئيسية" },
@@ -8,7 +9,15 @@ const base =
   "block rounded-full text-sm font-medium transition-all duration-300 py-2.5 px-5 text-neutral-400";
 const active = "bg-linear-to-r from-orange-500 to-orange-600 text-white";
 const inActive = "hover:bg-[#262626] hover:text-white";
+
+const mobileBase =
+  "block rounded-xl border px-5 py-4 text-base font-medium transition-all duration-300";
+const mobileActive = "bg-orange-500/10 border-orange-500/30 text-orange-500";
+const mobileInActive =
+  "border-transparent text-neutral-400 hover:text-white hover:bg-[#262626]";
 export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const close = () => setIsOpen(false);
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-[#262626]">
@@ -53,9 +62,52 @@ export default function Navbar() {
             <button className="p-3 text-neutral-500 hover:text-orange-500 hover:bg-[#161616] rounded-xl transition-all duration-300 border border-transparent hover:border-[#262626]">
               <i className="fa-solid fa-magnifying-glass"></i>
             </button>
-            <Link to="/blog" className="inline-flex cursor-pointer items-center justify-center rounded-full bg-linear-to-br from-orange-500 to-orange-600 px-8 py-4 font-semibold text-white transition-all duration-300 text-sm">
+            <Link
+              to="/blog"
+              className="inline-flex cursor-pointer items-center justify-center rounded-full bg-linear-to-br from-orange-500 to-orange-600 px-8 py-4 font-semibold text-white transition-all duration-300 text-sm"
+            >
               ابدأ القراءة
             </Link>
+          </div>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="القائمة"
+            className="md:hidden p-3 text-neutral-400 hover:text-orange-500 transition-colors"
+          >
+            <i
+              className={`fa-solid ${isOpen ? "fa-xmark" : "fa-bars"} text-xl`}
+            ></i>
+          </button>
+        </div>
+        {/* mobile links */}
+        <div
+          inert={!isOpen}
+          className={`md:hidden grid transition-all duration-300 ease-in-out ${
+            isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+          }`}
+        >
+          <div className="overflow-hidden">
+            <div className="border-t border-[#262626] bg-[#0a0a0a] px-4 py-4 space-y-2">
+              {links.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  onClick={close}
+                  className={({ isActive }) =>
+                    `${mobileBase} ${isActive ? mobileActive : mobileInActive}`
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+              <Link
+                to="/blog"
+                onClick={close}
+                className="mt-2 flex items-center justify-center rounded-full bg-linear-to-br from-orange-500 to-orange-600 px-8 py-4 font-semibold text-white text-sm"
+              >
+                ابدأ القراءة
+              </Link>
+            </div>
           </div>
         </div>
       </nav>

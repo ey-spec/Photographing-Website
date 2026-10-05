@@ -1,5 +1,7 @@
 import { FaXTwitter, FaGithub, FaLinkedin, FaYoutube } from "react-icons/fa6";
 import { FaChevronLeft } from "react-icons/fa6";
+import { Link } from "react-router-dom";
+import { data } from "../../data/posts";
 export default function Footer() {
   return (
     <>
@@ -64,22 +66,31 @@ export default function Footer() {
               </h3>
               <ul className="space-y-4">
                 <li>
-                  <a className="text-sm text-neutral-500 hover:text-orange-500 transition-colors duration-300 flex items-center gap-2 group">
+                  <Link
+                    to={"/"}
+                    className="text-sm text-neutral-500 hover:text-orange-500 transition-colors duration-300 flex items-center gap-2 group"
+                  >
                     <FaChevronLeft className="w-4 h-4 opacity-0 -mr-4 group-hover:opacity-100 group-hover:mr-0 transition-all duration-300 text-orange-500" />
                     الرئيسية
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a className="text-sm text-neutral-500 hover:text-orange-500 transition-colors duration-300 flex items-center gap-2 group">
+                  <Link
+                    to={"/blog"}
+                    className="text-sm text-neutral-500 hover:text-orange-500 transition-colors duration-300 flex items-center gap-2 group"
+                  >
                     <FaChevronLeft className="w-4 h-4 opacity-0 -mr-4 group-hover:opacity-100 group-hover:mr-0 transition-all duration-300 text-orange-500" />
                     المدونة
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a className="text-sm text-neutral-500 hover:text-orange-500 transition-colors duration-300 flex items-center gap-2 group">
+                  <Link
+                    to={"/about"}
+                    className="text-sm text-neutral-500 hover:text-orange-500 transition-colors duration-300 flex items-center gap-2 group"
+                  >
                     <FaChevronLeft className="w-4 h-4 opacity-0 -mr-4 group-hover:opacity-100 group-hover:mr-0 transition-all duration-300 text-orange-500" />
                     من نحن
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -89,30 +100,17 @@ export default function Footer() {
                 التصنيفات
               </h3>
               <ul className="space-y-4">
-                <li>
-                  <a className="text-sm text-neutral-500 hover:text-orange-500 transition-colors duration-300 flex items-center gap-2 group">
-                    <FaChevronLeft className="w-4 h-4 opacity-0 -mr-4 group-hover:opacity-100 group-hover:mr-0 transition-all duration-300 text-orange-500" />
-                    إضاءة
-                  </a>
-                </li>
-                <li>
-                  <a className="text-sm text-neutral-500 hover:text-orange-500 transition-colors duration-300 flex items-center gap-2 group">
-                    <FaChevronLeft className="w-4 h-4 opacity-0 -mr-4 group-hover:opacity-100 group-hover:mr-0 transition-all duration-300 text-orange-500" />
-                    بورتريه
-                  </a>
-                </li>
-                <li>
-                  <a className="text-sm text-neutral-500 hover:text-orange-500 transition-colors duration-300 flex items-center gap-2 group">
-                    <FaChevronLeft className="w-4 h-4 opacity-0 -mr-4 group-hover:opacity-100 group-hover:mr-0 transition-all duration-300 text-orange-500" />
-                    مناظر طبيعية
-                  </a>
-                </li>
-                <li>
-                  <a className="text-sm text-neutral-500 hover:text-orange-500 transition-colors duration-300 flex items-center gap-2 group">
-                    <FaChevronLeft className="w-4 h-4 opacity-0 -mr-4 group-hover:opacity-100 group-hover:mr-0 transition-all duration-300 text-orange-500" />
-                    تقنيات
-                  </a>
-                </li>
+                {data.categories.map((category) => (
+                  <li key={category.name}>
+                    <Link
+                      to={`/blog?category=${category.name}`}
+                      className="text-sm text-neutral-500 hover:text-orange-500 transition-colors duration-300 flex items-center gap-2 group"
+                    >
+                      <FaChevronLeft className="w-4 h-4 opacity-0 -mr-4 group-hover:opacity-100 group-hover:mr-0 transition-all duration-300 text-orange-500" />
+                      {category.name}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
             <div>

@@ -1,11 +1,12 @@
 import { Clock, MoveLeft, Star } from "lucide-react";
 import { formatDate } from "../../helpers/Helpers";
+import { Link } from "react-router-dom";
 
 export default function FeaturedPost({ post }) {
   return (
     <>
       <article className="group relative bg-[#161616] rounded-3xl overflow-hidden border border-[#262626] hover:border-orange-500/30 transition-all duration-500">
-        <a className="block">
+        <Link to={`/blog/${post.slug}`} className="block">
           <div className="grid md:grid-cols-2 gap-0">
             <div className="relative h-72 md:h-[400px] overflow-hidden">
               <img
@@ -65,7 +66,7 @@ export default function FeaturedPost({ post }) {
               </div>
             </div>
           </div>
-        </a>
+        </Link>
       </article>
     </>
   );

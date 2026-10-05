@@ -2,18 +2,37 @@ import { Search } from "lucide-react";
 import { data } from "../data/posts";
 import { useState } from "react";
 import ArticleCard from "../components/common/ArticleCard";
+import { useSearchParams } from "react-router-dom";
 
 export default function Blog() {
-  const categories = ["جميع المقالات", ...data.categories.map((c) => c.name)];
-  const [activeCat, setActiveCat] = useState("جميع المقالات");
+  const ALL = "جميع المقالات";
+  const categories = [ALL, ...data.categories.map((c) => c.name)];
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const param = searchParams.get("category");
+  const activeCat = categories.includes(param) ? param : ALL;
+
   const [view, setView] = useState("grid");
   const [page, setPage] = useState(1);
   const PerPage = 6;
 
-  const filtered =
-    activeCat === "جميع المقالات"
-      ? data.posts
-      : data.posts.filter((post) => post.category === activeCat);
+  const [search, setSearch] = useState("");
+
+  function selectCategory(cat) {
+    setPage(1);
+    setSearchParams(cat === ALL ? {} : { category: cat });
+  }
+
+  const filtered = data.posts.filter(
+    (post) =>
+      (activeCat === ALL || post.category === activeCat) &&
+      post.title.includes(search),
+  );
+
+  function resetFilters() {
+    setSearch("");
+    selectCategory(ALL);
+  }
 
   const totalPages = Math.ceil(filtered.length / PerPage);
   const posts = filtered.slice((page - 1) * PerPage, page * PerPage);
@@ -73,6 +92,11 @@ export default function Blog() {
               <div className="relative w-full md:w-80">
                 <input
                   type="text"
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setPage(1);
+                  }}
                   placeholder="ابحث في المقالات..."
                   aria-label="ابحث في المقالات"
                   className="w-full rounded-xl border border-[#262626] bg-[#161616] py-3 ps-5 pe-12 text-white placeholder-neutral-600 focus:border-orange-500 focus:outline-none"
@@ -87,10 +111,7 @@ export default function Blog() {
                 {categories.map((cat) => (
                   <button
                     key={cat}
-                    onClick={() => {
-                      setActiveCat(cat);
-                      setPage(1);
-                    }}
+                    onClick={() => selectCategory(cat)}
                     className={`rounded-xl px-4 py-2 text-sm font-medium transition-all duration-300 ${
                       cat === activeCat
                         ? "bg-linear-to-r from-orange-500 to-orange-600 text-white"
@@ -161,79 +182,128 @@ export default function Blog() {
               </div>
             </div>
           </div>
-          <div
-            className={
-              view === "grid"
-                ? "grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-                : "flex flex-col gap-6"
-            }
-          >
-            {posts.map((post) => (
-              <ArticleCard key={post.id} post={post} view={view} />
-            ))}
-          </div>
-          {totalPages > 1 && (
-            <>
-              <div className="flex justify-center items-center gap-2 mt-12">
-                <button
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={page === 1}
-                  className="p-3 rounded-xl border transition-all duration-300 bg-[#161616] border-[#262626] text-white hover:border-orange-500/50 hover:bg-[#1a1a1a] disabled:opacity-40 disabled:pointer-events-none"
+          {filtered.length === 0 ? (
+            <div className="text-center py-20">
+              <div className="w-24 h-24 bg-[#161616] border border-[#262626] rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg
+                  className="w-12 h-12 text-neutral-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    className="w-5 h-5 rotate-180"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M15 19l-7-7 7-7"
-                    />
-                  </svg>
-                </button>
-
-                <div className="flex items-center gap-1">
-                  {pageNumbers.map((n) => (
-                    <button
-                      key={n}
-                      onClick={() => setPage(n)}
-                      className={`min-w-[44px] h-11 rounded-xl text-sm font-medium transition-all duration-300 ${
-                        n === page
-                          ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white"
-                          : "bg-[#161616] text-neutral-400 border border-[#262626] hover:border-orange-500/50 hover:text-white"
-                      }`}
-                    >
-                      {n}
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={page === totalPages}
-                  className="p-3 rounded-xl border transition-all duration-300 bg-[#161616] border-[#262626] text-white hover:border-orange-500/50 hover:bg-[#1a1a1a] disabled:opacity-40 disabled:pointer-events-none"
-                >
-                  <svg
-                    className="w-5 h-5 rotate-180"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </button>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
               </div>
-              <p className="text-center text-neutral-500 mt-4 text-sm">
-                صفحة {page} من {totalPages}
+              <h3 className="text-2xl font-bold text-white mb-3">
+                لا توجد مقالات
+              </h3>
+              <p className="text-neutral-400 mb-6">
+                حاول تعديل البحث أو الفلتر للعثور على ما تبحث عنه.
               </p>
+              <button
+                onClick={resetFilters}
+                className="px-8 py-4 bg-linear-to-br from-orange-500 to-orange-600 rounded-full text-white font-semibold inline-flex items-center gap-2 cursor-pointer"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+                إعادة تعيين الفلاتر
+              </button>
+            </div>
+          ) : (
+            <>
+              <div
+                className={
+                  view === "grid"
+                    ? "grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+                    : "flex flex-col gap-6"
+                }
+              >
+                {posts.map((post) => (
+                  <ArticleCard key={post.id} post={post} view={view} />
+                ))}
+              </div>
+              {totalPages > 1 && (
+                <>
+                  <div className="flex justify-center items-center gap-2 mt-12">
+                    <button
+                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      disabled={page === 1}
+                      className="p-3 rounded-xl border transition-all duration-300 bg-[#161616] border-[#262626] text-white hover:border-orange-500/50 hover:bg-[#1a1a1a] disabled:opacity-40 disabled:pointer-events-none"
+                    >
+                      <svg
+                        className="w-5 h-5 rotate-180"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M15 19l-7-7 7-7"
+                        />
+                      </svg>
+                    </button>
+
+                    <div className="flex items-center gap-1">
+                      {pageNumbers.map((n) => (
+                        <button
+                          key={n}
+                          onClick={() => setPage(n)}
+                          className={`min-w-[44px] h-11 rounded-xl text-sm font-medium transition-all duration-300 ${
+                            n === page
+                              ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white"
+                              : "bg-[#161616] text-neutral-400 border border-[#262626] hover:border-orange-500/50 hover:text-white"
+                          }`}
+                        >
+                          {n}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={() =>
+                        setPage((p) => Math.min(totalPages, p + 1))
+                      }
+                      disabled={page === totalPages}
+                      className="p-3 rounded-xl border transition-all duration-300 bg-[#161616] border-[#262626] text-white hover:border-orange-500/50 hover:bg-[#1a1a1a] disabled:opacity-40 disabled:pointer-events-none"
+                    >
+                      <svg
+                        className="w-5 h-5 rotate-180"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <p className="text-center text-neutral-500 mt-4 text-sm">
+                    صفحة {page} من {totalPages}
+                  </p>
+                </>
+              )}
             </>
           )}
         </div>

@@ -6,6 +6,7 @@ import { FaMountainSun } from "react-icons/fa6";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import { CiSettings } from "react-icons/ci";
 import ArticleCard from "../components/common/ArticleCard";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const featuredPosts = data.posts.filter((post) => post.featured);
@@ -84,25 +85,25 @@ export default function Home() {
               انغمس في أسرار المحترفين ونصائح عملية لتطوير مهاراتك في التصوير.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4 mb-16">
-              <a
+              <Link
                 className="px-8 py-4 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full text-white font-semibold inline-flex items-center justify-center gap-2 group"
-                href="/blog"
+                to="/blog"
                 data-discover="true"
               >
                 <span>استكشف المقالات</span>
                 <div className=" group-hover:-translate-x-1 transition-transform">
                   <MoveLeft />
                 </div>
-              </a>
-              <a
+              </Link>
+              <Link
                 className="px-8 py-4 border border-[#333] rounded-full text-white font-semibold inline-flex items-center justify-center gap-2 hover:text-orange-500 hover:bg-orange-500/10 hover:border-orange-500"
-                href="/about"
+                to="/about"
                 data-discover="true"
               >
                 <CircleAlert size={20} />
 
                 <span>اعرف المزيد</span>
-              </a>
+              </Link>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
               <div
@@ -174,12 +175,15 @@ export default function Home() {
                 محتوى منتقى لبدء رحلة تعلمك
               </p>
             </div>
-            <a class="group inline-flex  gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-medium transition-all duration-300 hover:-translate-y-0.5">
+            <Link
+              to={"/blog"}
+              class="group inline-flex  gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-medium transition-all duration-300 hover:-translate-y-0.5"
+            >
               عرض الكل
               <div class="w-4 h-4 group-hover:-translate-x-1 transition-transform">
                 <ChevronLeft />
               </div>
-            </a>
+            </Link>
           </div>
           <div className="space-y-8 grid grid-cols-1 gap-1">
             {featuredPosts.map((post) => (
@@ -213,7 +217,8 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {categories.map((category) => (
-              <a
+              <Link
+                to={`/blog?category=${category.name}`}
                 className="group relative block p-6 rounded-2xl bg-[#161616] border border-[#262626] overflow-hidden hover:border-orange-500/30 transition-all duration-500 hover:-translate-y-1"
                 data-discover="true"
                 style={{ animationDelay: "0ms" }}
@@ -248,7 +253,7 @@ export default function Home() {
                     </svg>
                   </div>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
         </div>
